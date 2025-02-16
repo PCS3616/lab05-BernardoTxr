@@ -1,6 +1,7 @@
         @ /000 ;inicio do programa na memória 000
 START   LD ADDR ; addr -> acc
         AD DOIS ; addr + 2 -> acc
+        MM ADDR ; addr + 2 -> addr
         MM ESC ; acc -> escrita
         LD SOMA ; carrega soma acumulada
         AD PROX_IMPAR ; soma + próximo ímpar -> acc
