@@ -4,11 +4,11 @@ START   LD ADDR ; addr -> acc
         MM ESC ; acc -> escrita
         LD SOMA ; carrega soma acumulada
         AD PROX_IMPAR ; soma + próximo ímpar -> acc
-        MM SOMA ; armazena nova soma acumulada
-        LD PROX_IMPAR ; carrega próximo ímpar
+        MM SOMA ; soma + próximo ímpar -> soma
+        LD PROX_IMPAR ; próximo ímpar -> acc
         AD DOIS ; próximo ímpar + 2 -> acc
-        MM PROX_IMPAR ; armazena próximo ímpar atualizado
-        LD SOMA ; 
+        MM PROX_IMPAR ; próximo ímpar + 2 -> próximo ímpar
+        LD SOMA ;    
 ESC     K =0 ; será substituído por 9{addr+2}
         LD LIM ; lim -> acc
         SB ATUAL; lim - atual -> acc
