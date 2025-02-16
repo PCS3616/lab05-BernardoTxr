@@ -1,53 +1,40 @@
-@ /000 ; Início do programa na memória 000
-START   SC SUBR ; Chama a subrotina para calcular os quadrados
-        HM =0   ; Encerra o programa
+        @ /000 ; Inicio do programa na memória 000
+START   LD ADDR ; Carrega ADDR no acumulador
+        AD DOIS ; Soma 2 ao endereço de escrita
+        MM ESC  ; Atualiza endereço de escrita
 
-@ /00E
-UM      K =1    ; Valor unitário para incremento
-DOIS    K =2    ; Valor constante 2
+        LD SOMA  ; Carrega soma parcial
+        AD INCREMENTO ; Soma 2N + 1
+        MM SOMA  ; Atualiza soma
 
-@ /100  ; Início da tabela de quadrados perfeitos
-N       K =0    ; Contador de N (0 a 63)
-POS     K =100  ; Posição de armazenamento dos resultados
+        LD ESC   ; Carrega posição de escrita
+        MM SOMA  ; Armazena o quadrado na memória
 
-@ /200
-SUBR    K =0    ; Assinatura da subrotina
-INI     LD N    ; Carrega N
-        JN FIMSUBR ; Se N < 0, fim da subrotina
-        MM ACUM ; Zera o acumulador da soma
-        MM IMPAR ; Zera o primeiro número ímpar
-        JUMP LOOP
+        LD INCREMENTO ; Carrega incremento
+        AD DOIS  ; Incrementa 2 para manter a lógica (2N + 1)
+        MM INCREMENTO ; Atualiza incremento
 
-LOOP    LD IMPAR ; Carrega o número ímpar atual
-        AD UM    ; Soma 1
-        AD IMPAR ; Soma ao número ímpar para obter o próximo
-        MM IMPAR ; Atualiza o número ímpar
-        AD ACUM  ; Soma ao acumulador da soma
-        MM ACUM  ; Atualiza o acumulador
-        LD COUNT ; Carrega contador interno
-        AD UM    ; Incrementa contador
-        MM COUNT ; Atualiza contador
-        LD COUNT ; Carrega contador
-        SB N     ; Verifica se chegou a N
-        JN LOOP  ; Se não, continua somando
-        
-        LD ACUM  ; Carrega o resultado final (N^2)
-        MM POS ; Armazena no endereço correspondente
-        
-        LD POS   ; Atualiza a posição de memória
-        AD DOIS  ; Avança duas posições (valores de 2 bytes)
-        MM POS   ; Salva nova posição
-        
-        LD N     ; Incrementa N
-        AD UM    
-        MM N     ; Atualiza N
-        SB K64   ; Verifica se N = 64
-        JN INI   ; Se não, continua o cálculo
-        
-FIMSUBR RS SUBR ; Retorna da subrotina
+        LD ATUAL ; Carrega N atual
+        AD UM    ; N = N + 1
+        MM ATUAL ; Atualiza N
 
-@ /300
-ACUM    K =0    ; Acumulador de soma de ímpares
-IMPAR   K =-1   ; Primeiro número ímpar (-1, pois incrementamos no início)
-COUNT   K =0    ; Contador interno
-K64     K =64   ; Limite de N (64)
+        LD LIM   ; Carrega o limite (63)
+        SB ATUAL ; Se N == 63, fim
+        JZ FIM   ; Se chegou ao limite, encerra
+
+        JP START ; Continua o loop
+
+FIM     HM =0    ; Fim do programa
+
+        @ /100  ; Memória onde os quadrados serão armazenados
+ADDR    K /0100  ; Endereço base (posição 0x100)
+
+        @ /800
+N       K =0     ; índice
+SOMA    K =0     ; valor acumulado
+INCREMENTO K =1  ; Primeiro número ímpar (2*0 + 1)
+ATUAL   K =0     ; Índice da memória de escrita
+LIM     K =63    ; Último número natural permitido
+UM      K =1     ; Constante 1
+DOIS    K =2     ; Constante 2
+ESC     K =0     ; Posição de escrita na memória
