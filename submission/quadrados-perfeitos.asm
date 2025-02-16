@@ -1,40 +1,39 @@
-        @ /000 ; Inicio do programa na memória 000
-START   LD ADDR ; Carrega ADDR no acumulador
-        AD DOIS ; Soma 2 ao endereço de escrita
-        MM ESC  ; Atualiza endereço de escrita
+        @ /000 ;inicio do programa na memória 000
+START   LD ADDR ; addr -> acc
+        AD DOIS ; addr + 2 -> acc
+        MM ESC ; acc -> escrita
+        LD SOMA ; carrega soma acumulada
+        AD PROX_IMPAR ; soma + próximo ímpar -> acc
+        MM SOMA ; armazena nova soma acumulada
+        LD PROX_IMPAR ; carrega próximo ímpar
+        AD DOIS ; próximo ímpar + 2 -> acc
+        MM PROX_IMPAR ; armazena próximo ímpar atualizado
+ESC     K =0 ; será substituído por 9{addr+2}
+        LD LIM ; lim -> acc
+        SB ATUAL; lim - atual -> acc
+        JZ FIM ; lim-atual == 0 -> jump fim
+        LD ATUAL ; atual -> acc
+        AD UM ; atual + 1 > acc
+        MM ATUAL ; acc -> atual + 1
+        JP START ; else, recomeça
 
-        LD SOMA  ; Carrega soma parcial
-        AD INCREMENTO ; Soma 2N + 1
-        MM SOMA  ; Atualiza soma
+        @ /100
+        K =0 ;
 
-        LD ESC   ; Carrega posição de escrita
-        MM SOMA  ; Armazena o quadrado na memória
-
-        LD INCREMENTO ; Carrega incremento
-        AD DOIS  ; Incrementa 2 para manter a lógica (2N + 1)
-        MM INCREMENTO ; Atualiza incremento
-
-        LD ATUAL ; Carrega N atual
-        AD UM    ; N = N + 1
-        MM ATUAL ; Atualiza N
-
-        LD LIM   ; Carrega o limite (63)
-        SB ATUAL ; Se N == 63, fim
-        JZ FIM   ; Se chegou ao limite, encerra
-
-        JP START ; Continua o loop
-
-FIM     HM =0    ; Fim do programa
-
-        @ /100  ; Memória onde os quadrados serão armazenados
-ADDR    K /0100  ; Endereço base (posição 0x100)
-
+        @ /400 
+FIM     HM =0 ; # fim do programa
+        
         @ /800
-N       K =0     ; índice
-SOMA    K =0     ; valor acumulado
-INCREMENTO K =1  ; Primeiro número ímpar (2*0 + 1)
-ATUAL   K =0     ; Índice da memória de escrita
-LIM     K =63    ; Último número natural permitido
-UM      K =1     ; Constante 1
-DOIS    K =2     ; Constante 2
-ESC     K =0     ; Posição de escrita na memória
+ADDR    K /9100 ; variável que armazena instrução de escrita
+        @ /802
+UM      K =1 ; 
+        @ /804
+DOIS    K =2 ; 
+        @ /806
+LIM     K =63 ; 
+        @ /808
+ATUAL   K =0 ; 
+        @ /810 
+SOMA    K =0 ; soma acumulada
+        @ /812
+PROX_IMPAR K =1 ; próximo número ímpar a somar
