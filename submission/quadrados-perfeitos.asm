@@ -8,6 +8,7 @@ START   LD ADDR ; addr -> acc
         LD PROX_IMPAR ; carrega próximo ímpar
         AD DOIS ; próximo ímpar + 2 -> acc
         MM PROX_IMPAR ; armazena próximo ímpar atualizado
+        LD SOMA ; 
 ESC     K =0 ; será substituído por 9{addr+2}
         LD LIM ; lim -> acc
         SB ATUAL; lim - atual -> acc
